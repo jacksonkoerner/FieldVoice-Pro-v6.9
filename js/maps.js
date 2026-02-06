@@ -24,12 +24,14 @@ function closeMapsOverlay() {
     var overlay = document.getElementById('mapsOverlay');
     if (!overlay) return;
     overlay.classList.add('hidden');
-    // Destroy map to free memory
     if (mapsState.currentMap) {
         mapsState.currentMap.remove();
         mapsState.currentMap = null;
         mapsState.currentType = null;
     }
+    // Clear container
+    var wrapper = document.getElementById('mapContainer');
+    if (wrapper) wrapper.innerHTML = '';
 }
 
 function switchMap(type) {
@@ -42,37 +44,40 @@ function switchMap(type) {
     }
 
     mapsState.currentType = type;
-
-    // Update UI
     updateMapTabs(type);
     updateMapTitle(type);
 
-    // Get user location from cache
     var loc = getLocationFromCache();
     var lat = loc ? loc.lat : 39.8283;
     var lng = loc ? loc.lng : -98.5795;
 
-    var container = document.getElementById('mapContainer');
-    if (!container) return;
+    // Create fresh inner div to avoid Leaflet "already initialized" error
+    var wrapper = document.getElementById('mapContainer');
+    if (!wrapper) return;
+    wrapper.innerHTML = '<div id="mapView" style="width:100%;height:100%;"></div>';
+    var container = document.getElementById('mapView');
 
-    if (type === 'weather') {
-        createWeatherMap(container, lat, lng);
-    } else if (type === 'airspace') {
-        createAirspaceMap(container, lat, lng);
-    } else if (type === 'satellite') {
-        createSatelliteMap(container, lat, lng);
-    }
+    if (type === 'weather') createWeatherMap(container, lat, lng);
+    else if (type === 'airspace') createAirspaceMap(container, lat, lng);
+    else if (type === 'satellite') createSatelliteMap(container, lat, lng);
 }
 
 function updateMapTabs(activeType) {
+    var icons = { weather: 'fa-cloud-rain', airspace: 'fa-plane-up', satellite: 'fa-satellite' };
     var types = ['weather', 'airspace', 'satellite'];
     for (var i = 0; i < types.length; i++) {
         var tab = document.getElementById('mapTab-' + types[i]);
         if (tab) {
+            var icon = tab.querySelector('i');
+            var label = tab.querySelector('span');
             if (types[i] === activeType) {
-                tab.className = 'flex-1 py-2.5 text-xs font-bold text-white bg-dot-blue transition-colors';
+                tab.className = 'flex-1 py-2.5 flex flex-col items-center gap-0.5 bg-white text-dot-navy font-bold shadow-sm transition-colors';
+                if (icon) icon.className = 'fas ' + icons[types[i]] + ' text-sm text-dot-navy';
+                if (label) label.className = 'text-[10px] font-bold text-dot-navy';
             } else {
-                tab.className = 'flex-1 py-2.5 text-xs font-bold text-dot-blue bg-white hover:bg-slate-50 transition-colors';
+                tab.className = 'flex-1 py-2.5 flex flex-col items-center gap-0.5 bg-slate-100 text-slate-500 transition-colors';
+                if (icon) icon.className = 'fas ' + icons[types[i]] + ' text-sm text-slate-400';
+                if (label) label.className = 'text-[10px] font-medium text-slate-500';
             }
         }
     }
@@ -83,7 +88,6 @@ function updateMapTitle(type) {
     var titleEl = document.getElementById('mapTitle');
     if (titleEl) titleEl.textContent = titles[type] || '';
 
-    // Update dot indicators
     var types = ['weather', 'airspace', 'satellite'];
     for (var i = 0; i < types.length; i++) {
         var dot = document.getElementById('mapDot-' + i);
@@ -109,7 +113,7 @@ function addUserMarker(map, lat, lng) {
 // ============ MAP CREATORS ============
 
 function createWeatherMap(container, lat, lng) {
-    var map = L.map(container).setView([lat, lng], 8);
+    var map = L.map(container).setView([lat, lng], 11);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap',
@@ -118,7 +122,6 @@ function createWeatherMap(container, lat, lng) {
 
     addUserMarker(map, lat, lng);
 
-    // Fetch RainViewer radar overlay
     fetch('https://api.rainviewer.com/public/weather-maps.json')
         .then(function(r) { return r.json(); })
         .then(function(data) {
@@ -145,7 +148,6 @@ function createAirspaceMap(container, lat, lng) {
         maxZoom: 18
     }).addTo(map);
 
-    // OpenAIP airspace overlay
     var apiKey = (typeof API_KEYS !== 'undefined' && API_KEYS.OPENAIP) ? API_KEYS.OPENAIP : '';
     if (apiKey) {
         L.tileLayer('https://api.tiles.openaip.net/api/data/airspaces/{z}/{x}/{y}.png?apiKey=' + apiKey, {

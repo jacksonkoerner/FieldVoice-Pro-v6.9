@@ -230,11 +230,11 @@
         <section class="px-4 mb-4">
             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Field Tools</p>
             <div class="flex gap-3">
-                <button onclick="alert('Coming soon')" class="flex flex-col items-center gap-1 w-16 py-2 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
+                <button onclick="openCompass()" class="flex flex-col items-center gap-1 w-16 py-2 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
                     <i class="fas fa-compass text-dot-blue"></i>
                     <span class="text-[10px] text-slate-500">Compass</span>
                 </button>
-                <button onclick="alert('Coming soon')" class="flex flex-col items-center gap-1 w-16 py-2 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
+                <button onclick="openMeasure()" class="flex flex-col items-center gap-1 w-16 py-2 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
                     <i class="fas fa-ruler text-dot-blue"></i>
                     <span class="text-[10px] text-slate-500">Measure</span>
                 </button>
@@ -268,6 +268,8 @@
     </div>
 
     <script src="./js/maps.js"></script>
+    <script src="./js/compass.js"></script>
+    <script src="./js/measure.js"></script>
     <script src="./js/index.js"></script>
 
     <!-- Project Picker Modal -->
@@ -336,9 +338,53 @@
         <div id="mapContainer" class="flex-1"></div>
         <!-- Bottom Tabs -->
         <div class="flex border-t border-slate-200 shrink-0" style="padding-bottom: env(safe-area-inset-bottom);">
-            <button id="mapTab-weather" onclick="switchMap('weather')" class="flex-1 py-2.5 text-xs font-bold text-white bg-dot-blue transition-colors">Weather</button>
-            <button id="mapTab-airspace" onclick="switchMap('airspace')" class="flex-1 py-2.5 text-xs font-bold text-dot-blue bg-white hover:bg-slate-50 transition-colors">Airspace</button>
-            <button id="mapTab-satellite" onclick="switchMap('satellite')" class="flex-1 py-2.5 text-xs font-bold text-dot-blue bg-white hover:bg-slate-50 transition-colors">Satellite</button>
+            <button id="mapTab-weather" onclick="switchMap('weather')" class="flex-1 py-2.5 flex flex-col items-center gap-0.5 bg-white text-dot-navy font-bold shadow-sm transition-colors">
+                <i class="fas fa-cloud-rain text-sm text-dot-navy"></i>
+                <span class="text-[10px] font-bold text-dot-navy">Weather</span>
+            </button>
+            <button id="mapTab-airspace" onclick="switchMap('airspace')" class="flex-1 py-2.5 flex flex-col items-center gap-0.5 bg-slate-100 text-slate-500 transition-colors">
+                <i class="fas fa-plane-up text-sm text-slate-400"></i>
+                <span class="text-[10px] font-medium text-slate-500">Airspace</span>
+            </button>
+            <button id="mapTab-satellite" onclick="switchMap('satellite')" class="flex-1 py-2.5 flex flex-col items-center gap-0.5 bg-slate-100 text-slate-500 transition-colors">
+                <i class="fas fa-satellite text-sm text-slate-400"></i>
+                <span class="text-[10px] font-medium text-slate-500">Satellite</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Compass Overlay -->
+    <div id="compassOverlay" class="hidden fixed inset-0 z-50 bg-slate-900 flex flex-col">
+        <!-- Top Bar -->
+        <div class="bg-dot-navy px-4 py-3 flex items-center justify-between shrink-0" style="padding-top: max(env(safe-area-inset-top), 12px);">
+            <button onclick="closeCompass()" class="w-8 h-8 flex items-center justify-center text-white">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+            <span class="text-white font-bold text-sm">Compass</span>
+            <div class="w-8"></div>
+        </div>
+        <!-- Compass Display -->
+        <div id="compassDisplay" class="flex-1 flex items-center justify-center">
+            <p class="text-slate-500 text-sm">Initializing...</p>
+        </div>
+    </div>
+
+    <!-- Measure Overlay -->
+    <div id="measureOverlay" class="hidden fixed inset-0 z-50 bg-white flex flex-col">
+        <!-- Top Bar -->
+        <div class="bg-dot-navy px-4 py-3 flex items-center justify-between shrink-0" style="padding-top: max(env(safe-area-inset-top), 12px);">
+            <button onclick="closeMeasure()" class="w-8 h-8 flex items-center justify-center text-white">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+            <span class="text-white font-bold text-sm">Measure Distance</span>
+            <button onclick="clearMeasure()" class="text-white text-xs font-bold px-3 py-1 border border-white/30 rounded">Clear</button>
+        </div>
+        <!-- Map Container -->
+        <div id="measureMapContainer" class="flex-1"></div>
+        <!-- Bottom Total Bar -->
+        <div class="bg-dot-navy px-4 py-3 shrink-0 text-center" style="padding-bottom: max(env(safe-area-inset-bottom), 8px);">
+            <p id="measureTotal" class="text-white font-bold text-sm">Tap map to place pins</p>
+            <p id="measureArea" class="text-slate-400 text-xs mt-0.5"></p>
         </div>
     </div>
 
