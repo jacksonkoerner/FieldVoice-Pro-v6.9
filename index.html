@@ -537,7 +537,7 @@
     <div id="mapsOverlay" class="hidden fixed inset-0 z-50 bg-white flex flex-col">
         <!-- Top Bar -->
         <div class="bg-dot-navy px-4 py-3 flex items-center justify-between shrink-0" style="padding-top: max(env(safe-area-inset-top), 12px);">
-            <button onclick="closeMapsOverlay()" class="w-8 h-8 flex items-center justify-center text-white">
+            <button onclick="closeMapsOverlay()" class="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center text-white">
                 <i class="fas fa-times text-lg"></i>
             </button>
             <div class="flex flex-col items-center">
@@ -548,7 +548,7 @@
                     <div id="mapDot-2" class="w-1.5 h-1.5 rounded-full bg-white/40"></div>
                 </div>
             </div>
-            <div class="w-8"></div>
+            <div class="w-11"></div>
         </div>
         <!-- Map Container -->
         <div id="mapContainer" class="flex-1"></div>
@@ -573,11 +573,11 @@
     <div id="compassOverlay" class="hidden fixed inset-0 z-50 bg-slate-900 flex flex-col">
         <!-- Top Bar -->
         <div class="bg-dot-navy px-4 py-3 flex items-center justify-between shrink-0" style="padding-top: max(env(safe-area-inset-top), 12px);">
-            <button onclick="closeCompass()" class="w-8 h-8 flex items-center justify-center text-white">
+            <button onclick="closeCompass()" class="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center text-white">
                 <i class="fas fa-times text-lg"></i>
             </button>
             <span class="text-white font-bold text-sm">Compass</span>
-            <div class="w-8"></div>
+            <div class="w-11"></div>
         </div>
         <!-- Compass Display -->
         <div id="compassDisplay" class="flex-1 flex items-center justify-center">
@@ -589,7 +589,7 @@
     <div id="measureOverlay" class="hidden fixed inset-0 z-50 bg-white flex flex-col">
         <!-- Top Bar -->
         <div class="bg-dot-navy px-4 py-3 flex items-center justify-between shrink-0" style="padding-top: max(env(safe-area-inset-top), 12px);">
-            <button onclick="closeMeasure()" class="w-8 h-8 flex items-center justify-center text-white">
+            <button onclick="closeMeasure()" class="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center text-white">
                 <i class="fas fa-times text-lg"></i>
             </button>
             <span class="text-white font-bold text-sm">Measure Distance</span>
@@ -608,11 +608,11 @@
     <div id="calcOverlay" class="hidden fixed inset-0 z-50 bg-white flex flex-col">
         <!-- Top Bar -->
         <div class="bg-dot-navy px-4 py-3 flex items-center justify-between shrink-0" style="padding-top: max(env(safe-area-inset-top), 12px);">
-            <button onclick="closeCalc()" class="w-8 h-8 flex items-center justify-center text-white">
+            <button onclick="closeCalc()" class="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center text-white">
                 <i class="fas fa-times text-lg"></i>
             </button>
             <span class="text-white font-bold text-sm">Construction Calculator</span>
-            <div class="w-8"></div>
+            <div class="w-11"></div>
         </div>
         <!-- Content -->
         <div id="calcContent" class="flex-1 flex flex-col overflow-hidden"></div>
@@ -622,11 +622,11 @@
     <div id="slopeOverlay" class="hidden fixed inset-0 z-50 bg-white flex flex-col">
         <!-- Top Bar -->
         <div class="bg-dot-navy px-4 py-3 flex items-center justify-between shrink-0" style="padding-top: max(env(safe-area-inset-top), 12px);">
-            <button onclick="closeSlope()" class="w-8 h-8 flex items-center justify-center text-white">
+            <button onclick="closeSlope()" class="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center text-white">
                 <i class="fas fa-times text-lg"></i>
             </button>
             <span class="text-white font-bold text-sm">Slope &amp; Grade</span>
-            <div class="w-8"></div>
+            <div class="w-11"></div>
         </div>
         <!-- Content -->
         <div id="slopeContent" class="flex-1 flex flex-col overflow-hidden"></div>
@@ -636,11 +636,11 @@
     <div id="levelOverlay" class="hidden fixed inset-0 z-50 bg-slate-900 flex flex-col">
         <!-- Top Bar -->
         <div class="bg-dot-navy px-4 py-3 flex items-center justify-between shrink-0" style="padding-top: max(env(safe-area-inset-top), 12px);">
-            <button onclick="closeLevel()" class="w-8 h-8 flex items-center justify-center text-white">
+            <button onclick="closeLevel()" class="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center text-white">
                 <i class="fas fa-times text-lg"></i>
             </button>
             <span class="text-white font-bold text-sm">Level / Inclinometer</span>
-            <div class="w-8"></div>
+            <div class="w-11"></div>
         </div>
         <!-- Content -->
         <div id="levelContent" class="flex-1 flex flex-col overflow-hidden"></div>
@@ -650,11 +650,11 @@
     <div id="decibelOverlay" class="hidden fixed inset-0 z-50 bg-slate-100 flex flex-col">
         <!-- Top Bar -->
         <div class="bg-dot-navy px-4 py-3 flex items-center justify-between shrink-0" style="padding-top: max(env(safe-area-inset-top), 12px);">
-            <button onclick="closeDecibel()" class="w-8 h-8 flex items-center justify-center text-white">
+            <button onclick="closeDecibel()" class="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center text-white">
                 <i class="fas fa-times text-lg"></i>
             </button>
             <span class="text-white font-bold text-sm">Decibel Meter</span>
-            <div class="w-8"></div>
+            <div class="w-11"></div>
         </div>
         <!-- Content -->
         <div id="decibelContent" class="flex-1 flex flex-col overflow-hidden"></div>
@@ -664,11 +664,11 @@
     <div id="timerOverlay" class="hidden fixed inset-0 z-50 bg-white flex flex-col">
         <!-- Top Bar -->
         <div class="bg-dot-navy px-4 py-3 flex items-center justify-between shrink-0" style="padding-top: max(env(safe-area-inset-top), 12px);">
-            <button onclick="closeTimer()" class="w-8 h-8 flex items-center justify-center text-white">
+            <button onclick="closeTimer()" class="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center text-white">
                 <i class="fas fa-times text-lg"></i>
             </button>
             <span class="text-white font-bold text-sm">Timer / Stopwatch</span>
-            <div class="w-8"></div>
+            <div class="w-11"></div>
         </div>
         <!-- Content -->
         <div id="timerContent" class="flex-1 flex flex-col overflow-hidden"></div>
@@ -678,11 +678,11 @@
     <div id="flashlightOverlay" class="hidden fixed inset-0 z-50 bg-slate-900 flex flex-col">
         <!-- Top Bar -->
         <div class="bg-dot-navy px-4 py-3 flex items-center justify-between shrink-0" style="padding-top: max(env(safe-area-inset-top), 12px);">
-            <button onclick="closeFlashlight()" class="w-8 h-8 flex items-center justify-center text-white">
+            <button onclick="closeFlashlight()" class="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center text-white">
                 <i class="fas fa-times text-lg"></i>
             </button>
             <span class="text-white font-bold text-sm">Flashlight</span>
-            <div class="w-8"></div>
+            <div class="w-11"></div>
         </div>
         <!-- Content -->
         <div id="flashlightContent" class="flex-1 flex flex-col overflow-hidden"></div>
@@ -692,11 +692,11 @@
     <div id="qrOverlay" class="hidden fixed inset-0 z-50 bg-black flex flex-col">
         <!-- Top Bar -->
         <div class="bg-dot-navy px-4 py-3 flex items-center justify-between shrink-0" style="padding-top: max(env(safe-area-inset-top), 12px);">
-            <button onclick="closeQR()" class="w-8 h-8 flex items-center justify-center text-white">
+            <button onclick="closeQR()" class="w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center text-white">
                 <i class="fas fa-times text-lg"></i>
             </button>
             <span class="text-white font-bold text-sm">QR Scanner</span>
-            <div class="w-8"></div>
+            <div class="w-11"></div>
         </div>
         <!-- Content -->
         <div id="qrContent" class="flex-1 flex flex-col overflow-hidden"></div>
@@ -704,6 +704,7 @@
 
     <!-- Initialize PWA features -->
     <script>
+        if (typeof updateDraftsSection === 'undefined') { var updateDraftsSection = function() {}; }
         initPWA({ onOnline: updateDraftsSection });
     </script>
 

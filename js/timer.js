@@ -41,6 +41,9 @@ function closeTimer() {
     overlay.classList.add('hidden');
     var strip = document.getElementById('emergencyStrip');
     if (strip) strip.classList.remove('hidden');
+    // Clear running intervals to prevent leaks
+    if (timerState.swInterval) { clearInterval(timerState.swInterval); timerState.swInterval = null; }
+    if (timerState.tmInterval) { clearInterval(timerState.tmInterval); timerState.tmInterval = null; }
     stopTimerAlarm();
 }
 
