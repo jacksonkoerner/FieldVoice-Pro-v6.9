@@ -741,7 +741,7 @@ async function loadWeatherDetailsPanel() {
 
     // Windy.com radar iframe
     html += '<div class="rounded-lg overflow-hidden border border-slate-200">';
-    html += '<iframe width="100%" height="250" frameborder="0" src="https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=default&metricTemp=default&metricWind=default&zoom=8&overlay=rain&product=radar&level=surface&lat=' + loc.lat + '&lon=' + loc.lng + '"></iframe>';
+    html += '<iframe width="100%" height="250" frameborder="0" src="https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=default&metricTemp=default&metricWind=default&zoom=10&overlay=rain&product=radar&level=surface&lat=' + loc.lat + '&lon=' + loc.lng + '"></iframe>';
     html += '</div>';
 
     panel.innerHTML = html;
@@ -826,28 +826,40 @@ async function loadDroneOpsPanel() {
     html += '<span class="text-xs font-bold px-2 py-1 rounded ' + (withinWindow ? 'bg-safety-green text-white' : 'bg-red-600 text-white') + '">' + (withinWindow ? 'ACTIVE' : 'CLOSED') + '</span>';
     html += '</div>';
 
-    // Wind assessment
-    html += '<div class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 mb-3">';
-    html += '<i class="fas ' + windIcon + ' ' + windColor + ' text-lg"></i>';
-    html += '<div class="flex-1">';
-    html += '<p class="text-xs font-bold uppercase tracking-wider text-slate-500">Wind Assessment</p>';
-    html += '<p class="text-sm text-slate-700">Gusts: ' + (gusts !== null ? gusts + ' mph' : 'N/A') + '</p>';
-    html += '</div>';
-    html += '<span class="text-xs font-bold px-2 py-1 rounded ' + windColor + ' bg-white border">' + windStatus + '</span>';
-    html += '</div>';
+    // Wind & site data grid (mirrors weather panel style)
+    var windSpd = weatherDataCache ? weatherDataCache.windSpeed : '--';
+    var gustWarning = gusts !== null && gusts > 20;
 
-    // Info grid
-    html += '<div class="grid grid-cols-2 gap-3">';
+    html += '<div class="grid grid-cols-2 gap-3 mb-3">';
+    html += '<div class="bg-slate-50 rounded-lg p-3 text-center">';
+    html += '<i class="fas fa-wind text-dot-blue text-lg mb-1"></i>';
+    html += '<p class="text-lg font-bold text-slate-800">' + windSpd + ' <span class="text-xs font-normal">mph</span></p>';
+    html += '<p class="text-[10px] text-slate-400 uppercase">Wind Speed</p>';
+    html += '</div>';
+    html += '<div class="bg-slate-50 rounded-lg p-3 text-center">';
+    html += '<i class="fas fa-wind ' + (gustWarning ? 'text-dot-orange' : 'text-dot-blue') + ' text-lg mb-1"></i>';
+    html += '<p class="text-lg font-bold ' + (gustWarning ? 'text-dot-orange' : 'text-slate-800') + '">' + (gusts !== null ? gusts : '--') + ' <span class="text-xs font-normal">mph</span></p>';
+    html += '<p class="text-[10px] ' + (gustWarning ? 'text-dot-orange' : 'text-slate-400') + ' uppercase">Gusts</p>';
+    html += '</div>';
     html += '<div class="bg-slate-50 rounded-lg p-3 text-center">';
     html += '<i class="fas fa-mountain text-dot-blue text-lg mb-1"></i>';
     html += '<p class="text-lg font-bold text-slate-800">' + elevationFt + ' <span class="text-xs font-normal">ft</span></p>';
-    html += '<p class="text-[10px] text-slate-400 uppercase">Ground Elevation</p>';
+    html += '<p class="text-[10px] text-slate-400 uppercase">Elevation</p>';
     html += '</div>';
     html += '<div class="bg-slate-50 rounded-lg p-3 text-center">';
     html += '<i class="fas fa-compass text-dot-orange text-lg mb-1"></i>';
     html += '<p class="text-lg font-bold text-slate-800">' + declination + '</p>';
     html += '<p class="text-[10px] text-slate-400 uppercase">Mag Declination</p>';
     html += '</div>';
+    html += '</div>';
+
+    // Wind assessment status badge
+    html += '<div class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 mb-3">';
+    html += '<i class="fas ' + windIcon + ' ' + windColor + ' text-lg"></i>';
+    html += '<div class="flex-1">';
+    html += '<p class="text-xs font-bold uppercase tracking-wider text-slate-500">Wind Assessment</p>';
+    html += '</div>';
+    html += '<span class="text-xs font-bold px-2 py-1 rounded ' + windColor + ' bg-white border">' + windStatus + '</span>';
     html += '</div>';
 
     // GPS coordinates
