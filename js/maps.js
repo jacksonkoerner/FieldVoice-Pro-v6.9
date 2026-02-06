@@ -3,12 +3,15 @@
 //
 // Uses:
 // - ui-utils.js: getLocationFromCache
-// - api-keys.js: API_KEYS.OPENAIP
-// - Leaflet.js (CDN)
+// - Leaflet.js (CDN) — satellite map only
+//
+// Weather Radar: Windy.com embed iframe
+// Drone Airspace: FAA UAS Facility Map iframe
+// Satellite: Leaflet + Esri World Imagery tiles
 // ============================================================================
 
 var mapsState = {
-    currentMap: null,
+    currentMap: null,   // Leaflet map instance (satellite only)
     currentType: null
 };
 
@@ -32,11 +35,12 @@ function closeMapsOverlay() {
     // Restore emergency strip
     var strip = document.getElementById('emergencyStrip');
     if (strip) strip.classList.remove('hidden');
+    // Destroy Leaflet map if active
     if (mapsState.currentMap) {
         mapsState.currentMap.remove();
         mapsState.currentMap = null;
-        mapsState.currentType = null;
     }
+    mapsState.currentType = null;
     // Clear container
     var wrapper = document.getElementById('mapContainer');
     if (wrapper) wrapper.innerHTML = '';
@@ -45,7 +49,7 @@ function closeMapsOverlay() {
 function switchMap(type) {
     if (type === mapsState.currentType) return;
 
-    // Destroy existing map
+    // Destroy existing Leaflet map if one is active (satellite)
     if (mapsState.currentMap) {
         mapsState.currentMap.remove();
         mapsState.currentMap = null;
@@ -59,15 +63,21 @@ function switchMap(type) {
     var lat = loc ? loc.lat : 39.8283;
     var lng = loc ? loc.lng : -98.5795;
 
-    // Create fresh inner div to avoid Leaflet "already initialized" error
     var wrapper = document.getElementById('mapContainer');
     if (!wrapper) return;
-    wrapper.innerHTML = '<div id="mapView" style="width:100%;height:100%;"></div>';
-    var container = document.getElementById('mapView');
 
-    if (type === 'weather') createWeatherMap(container, lat, lng);
-    else if (type === 'airspace') createAirspaceMap(container, lat, lng);
-    else if (type === 'satellite') createSatelliteMap(container, lat, lng);
+    if (type === 'weather') {
+        // Windy.com iframe — no Leaflet needed
+        wrapper.innerHTML = '<iframe src="https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=default&metricTemp=%C2%B0F&metricWind=mph&zoom=9&overlay=radar&product=radar&level=surface&lat=' + lat + '&lon=' + lng + '" style="width:100%;height:100%;border:none;" allowfullscreen></iframe>';
+    } else if (type === 'airspace') {
+        // FAA UAS Facility Map iframe — no Leaflet needed
+        wrapper.innerHTML = '<iframe src="https://faa.maps.arcgis.com/apps/webappviewer/index.html?id=9c2e4f7b9c264f9c96f8d8e89eb0ceb3&center=' + lng + ',' + lat + '&level=12" style="width:100%;height:100%;border:none;" allowfullscreen></iframe>';
+    } else if (type === 'satellite') {
+        // Leaflet + Esri World Imagery
+        wrapper.innerHTML = '<div id="mapView" style="width:100%;height:100%;"></div>';
+        var container = document.getElementById('mapView');
+        createSatelliteMap(container, lat, lng);
+    }
 }
 
 function updateMapTabs(activeType) {
@@ -107,6 +117,8 @@ function updateMapTitle(type) {
     }
 }
 
+// ============ MAP CREATORS ============
+
 function addUserMarker(map, lat, lng) {
     L.marker([lat, lng], {
         icon: L.divIcon({
@@ -116,60 +128,6 @@ function addUserMarker(map, lat, lng) {
             iconAnchor: [7, 7]
         })
     }).addTo(map);
-}
-
-// ============ MAP CREATORS ============
-
-function createWeatherMap(container, lat, lng) {
-    var map = L.map(container).setView([lat, lng], 11);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap',
-        maxZoom: 18
-    }).addTo(map);
-
-    addUserMarker(map, lat, lng);
-
-    fetch('https://api.rainviewer.com/public/weather-maps.json')
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-            if (data.radar && data.radar.past && data.radar.past.length > 0) {
-                var latest = data.radar.past[data.radar.past.length - 1];
-                L.tileLayer(data.host + latest.path + '/256/{z}/{x}/{y}/2/1_1.png', {
-                    opacity: 0.6,
-                    maxZoom: 18
-                }).addTo(map);
-            }
-        })
-        .catch(function(e) {
-            console.warn('[Maps] RainViewer fetch failed:', e);
-        });
-
-    mapsState.currentMap = map;
-}
-
-function createAirspaceMap(container, lat, lng) {
-    var map = L.map(container).setView([lat, lng], 10);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap',
-        maxZoom: 18
-    }).addTo(map);
-
-    var apiKey = (typeof API_KEYS !== 'undefined' && API_KEYS.OPENAIP) ? API_KEYS.OPENAIP : '';
-    if (apiKey) {
-        L.tileLayer('https://{s}.api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=' + apiKey, {
-            subdomains: 'abc',
-            opacity: 0.7,
-            minZoom: 7,
-            maxZoom: 18
-        }).addTo(map);
-    } else {
-        console.warn('[Maps] No OpenAIP API key found. Airspace overlay will not load.');
-    }
-
-    addUserMarker(map, lat, lng);
-    mapsState.currentMap = map;
 }
 
 function createSatelliteMap(container, lat, lng) {
