@@ -169,8 +169,8 @@ function renderLevelUI() {
                 '<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-20 bg-slate-600"></div>' +
                 // Center target circle
                 '<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full border-2 border-slate-600"></div>' +
-                // Bubble (moves)
-                '<div id="levelBubble" class="absolute w-10 h-10 rounded-full bg-safety-green shadow-lg" style="top:50%;left:50%;transform:translate(-50%,-50%);transition:top 0.1s,left 0.1s;"></div>' +
+                // Bubble (moves via transform)
+                '<div id="levelBubble" class="absolute w-10 h-10 rounded-full shadow-lg" style="top:50%;left:50%;margin-left:-20px;margin-top:-20px;background:#16a34a;transition:transform 0.1s ease-out;transform:translate(0px,0px);"></div>' +
             '</div>' +
             // Status text
             '<div class="mt-6 text-center">' +
@@ -212,17 +212,17 @@ function updateBubbleUI(beta, gamma) {
     var yEl = document.getElementById('levelY');
     if (!bubble) return;
 
-    // Clamp tilt to +-30 degrees for bubble range
-    var clampedGamma = Math.max(-30, Math.min(30, gamma));
-    var clampedBeta = Math.max(-30, Math.min(30, beta));
+    // Clamp tilt to +-15 degrees mapped to full container range
+    var clampedGamma = Math.max(-15, Math.min(15, gamma));
+    var clampedBeta = Math.max(-15, Math.min(15, beta));
 
-    // Map to pixel offset within 260px circle (130px radius, minus bubble 20px)
-    var maxOffset = 100; // px from center
-    var xOff = (clampedGamma / 30) * maxOffset;
-    var yOff = (clampedBeta / 30) * maxOffset;
+    // Map to pixel offset (container 260px, bubble 40px, max travel ~100px from center)
+    var maxOffset = 100;
+    var xOff = (clampedGamma / 15) * maxOffset;
+    var yOff = (clampedBeta / 15) * maxOffset;
 
-    bubble.style.left = 'calc(50% + ' + xOff + 'px)';
-    bubble.style.top = 'calc(50% + ' + yOff + 'px)';
+    // Use transform for smooth movement (bubble is already centered via top/left/margin)
+    bubble.style.transform = 'translate(' + xOff.toFixed(1) + 'px,' + yOff.toFixed(1) + 'px)';
 
     var isLevel = Math.abs(gamma) < 1 && Math.abs(beta) < 1;
     bubble.style.background = isLevel ? '#16a34a' : '#3b82f6';
