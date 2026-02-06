@@ -229,18 +229,30 @@
         <!-- FIELD TOOLS -->
         <section class="px-4 mb-4">
             <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Field Tools</p>
-            <div class="flex gap-3">
-                <button onclick="openCompass()" class="flex flex-col items-center gap-1 w-16 py-2 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
+            <div class="flex gap-3 overflow-x-auto hide-scrollbar">
+                <button onclick="openCompass()" class="flex flex-col items-center gap-1 w-16 shrink-0 py-2 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
                     <i class="fas fa-compass text-dot-blue"></i>
                     <span class="text-[10px] text-slate-500">Compass</span>
                 </button>
-                <button onclick="openMeasure()" class="flex flex-col items-center gap-1 w-16 py-2 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
+                <button onclick="openMeasure()" class="flex flex-col items-center gap-1 w-16 shrink-0 py-2 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
                     <i class="fas fa-ruler text-dot-blue"></i>
                     <span class="text-[10px] text-slate-500">Measure</span>
                 </button>
-                <button onclick="openMapsOverlay()" class="flex flex-col items-center gap-1 w-16 py-2 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
+                <button onclick="openMapsOverlay()" class="flex flex-col items-center gap-1 w-16 shrink-0 py-2 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
                     <i class="fas fa-map text-dot-blue"></i>
                     <span class="text-[10px] text-slate-500">Maps</span>
+                </button>
+                <button onclick="openCalc()" class="flex flex-col items-center gap-1 w-16 shrink-0 py-2 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
+                    <i class="fas fa-calculator text-dot-blue"></i>
+                    <span class="text-[10px] text-slate-500">Calc</span>
+                </button>
+                <button onclick="openSlope()" class="flex flex-col items-center gap-1 w-16 shrink-0 py-2 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
+                    <i class="fas fa-road text-dot-blue"></i>
+                    <span class="text-[10px] text-slate-500">Slope</span>
+                </button>
+                <button onclick="openLevel()" class="flex flex-col items-center gap-1 w-16 shrink-0 py-2 bg-white rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
+                    <i class="fas fa-ruler-horizontal text-dot-blue"></i>
+                    <span class="text-[10px] text-slate-500">Level</span>
                 </button>
             </div>
         </section>
@@ -270,6 +282,9 @@
     <script src="./js/maps.js"></script>
     <script src="./js/compass.js"></script>
     <script src="./js/measure.js"></script>
+    <script src="./js/calc.js"></script>
+    <script src="./js/slope.js"></script>
+    <script src="./js/level.js"></script>
     <script src="./js/index.js"></script>
 
     <!-- Project Picker Modal -->
@@ -386,6 +401,48 @@
             <p id="measureTotal" class="text-white font-bold text-sm">Tap map to place pins</p>
             <p id="measureArea" class="text-slate-400 text-xs mt-0.5"></p>
         </div>
+    </div>
+
+    <!-- Calc Overlay -->
+    <div id="calcOverlay" class="hidden fixed inset-0 z-50 bg-white flex flex-col">
+        <!-- Top Bar -->
+        <div class="bg-dot-navy px-4 py-3 flex items-center justify-between shrink-0" style="padding-top: max(env(safe-area-inset-top), 12px);">
+            <button onclick="closeCalc()" class="w-8 h-8 flex items-center justify-center text-white">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+            <span class="text-white font-bold text-sm">Construction Calculator</span>
+            <div class="w-8"></div>
+        </div>
+        <!-- Content -->
+        <div id="calcContent" class="flex-1 flex flex-col overflow-hidden"></div>
+    </div>
+
+    <!-- Slope Overlay -->
+    <div id="slopeOverlay" class="hidden fixed inset-0 z-50 bg-white flex flex-col">
+        <!-- Top Bar -->
+        <div class="bg-dot-navy px-4 py-3 flex items-center justify-between shrink-0" style="padding-top: max(env(safe-area-inset-top), 12px);">
+            <button onclick="closeSlope()" class="w-8 h-8 flex items-center justify-center text-white">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+            <span class="text-white font-bold text-sm">Slope &amp; Grade</span>
+            <div class="w-8"></div>
+        </div>
+        <!-- Content -->
+        <div id="slopeContent" class="flex-1 flex flex-col overflow-hidden"></div>
+    </div>
+
+    <!-- Level Overlay -->
+    <div id="levelOverlay" class="hidden fixed inset-0 z-50 bg-slate-900 flex flex-col">
+        <!-- Top Bar -->
+        <div class="bg-dot-navy px-4 py-3 flex items-center justify-between shrink-0" style="padding-top: max(env(safe-area-inset-top), 12px);">
+            <button onclick="closeLevel()" class="w-8 h-8 flex items-center justify-center text-white">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+            <span class="text-white font-bold text-sm">Level / Inclinometer</span>
+            <div class="w-8"></div>
+        </div>
+        <!-- Content -->
+        <div id="levelContent" class="flex-1 flex flex-col overflow-hidden"></div>
     </div>
 
     <!-- Initialize PWA features -->
