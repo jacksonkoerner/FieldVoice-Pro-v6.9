@@ -1753,14 +1753,31 @@
                     const rawDataUrl = await readFileAsDataURL(file);
                     const compressedDataUrl = await compressImage(rawDataUrl, 1200, 0.7);
 
+                    // Open photo markup overlay for annotation
+                    let finalDataUrl = compressedDataUrl;
+                    if (typeof openPhotoMarkup === 'function') {
+                        const markedUp = await openPhotoMarkup(compressedDataUrl, {
+                            lat: gps ? gps.lat : null,
+                            lon: gps ? gps.lng : null,
+                            timestamp: Date.now(),
+                            heading: null
+                        });
+                        if (markedUp === null) {
+                            // User discarded — skip this photo
+                            console.log('[PHOTO] Markup discarded, skipping photo');
+                            continue;
+                        }
+                        finalDataUrl = markedUp;
+                    }
+
                     // Try to upload to Supabase if online, otherwise store base64 for later
                     let storagePath = null;
-                    let publicUrl = compressedDataUrl; // Use base64 as fallback URL for display
+                    let publicUrl = finalDataUrl; // Use base64 as fallback URL for display
 
                     if (navigator.onLine) {
                         try {
                             showToast('Uploading photo...', 'info');
-                            const compressedBlob = await dataURLtoBlob(compressedDataUrl);
+                            const compressedBlob = await dataURLtoBlob(finalDataUrl);
                             const result = await uploadPhotoToSupabase(compressedBlob, photoId);
                             storagePath = result.storagePath;
                             publicUrl = result.publicUrl;
@@ -1773,7 +1790,7 @@
                     const photoObj = {
                         id: photoId,
                         url: publicUrl,
-                        base64: storagePath ? null : compressedDataUrl, // Only store base64 if not uploaded
+                        base64: storagePath ? null : finalDataUrl, // Only store base64 if not uploaded
                         storagePath: storagePath,
                         caption: '',
                         timestamp: now.toISOString(),
@@ -4118,13 +4135,30 @@
                     const rawDataUrl = await readFileAsDataURL(file);
                     const compressedDataUrl = await compressImage(rawDataUrl, 1200, 0.7);
 
+                    // Open photo markup overlay for annotation
+                    let finalDataUrl = compressedDataUrl;
+                    if (typeof openPhotoMarkup === 'function') {
+                        const markedUp = await openPhotoMarkup(compressedDataUrl, {
+                            lat: gps ? gps.lat : null,
+                            lon: gps ? gps.lng : null,
+                            timestamp: Date.now(),
+                            heading: null
+                        });
+                        if (markedUp === null) {
+                            // User discarded — skip this photo
+                            console.log('[PHOTO] Markup discarded, skipping photo');
+                            continue;
+                        }
+                        finalDataUrl = markedUp;
+                    }
+
                     // Try to upload to Supabase if online, otherwise store base64 for later
                     let storagePath = null;
-                    let publicUrl = compressedDataUrl; // Use base64 as fallback URL for display
+                    let publicUrl = finalDataUrl; // Use base64 as fallback URL for display
 
                     if (navigator.onLine) {
                         try {
-                            const compressedBlob = await dataURLtoBlob(compressedDataUrl);
+                            const compressedBlob = await dataURLtoBlob(finalDataUrl);
                             console.log(`[PHOTO] Compressed: ${Math.round(file.size/1024)}KB -> ${Math.round(compressedBlob.size/1024)}KB`);
 
                             showToast('Uploading photo...', 'info');
@@ -4144,7 +4178,7 @@
                     const photoObj = {
                         id: photoId,
                         url: publicUrl,
-                        base64: storagePath ? null : compressedDataUrl, // Only store base64 if not uploaded
+                        base64: storagePath ? null : finalDataUrl, // Only store base64 if not uploaded
                         storagePath: storagePath,
                         caption: '',
                         timestamp: timestamp,
